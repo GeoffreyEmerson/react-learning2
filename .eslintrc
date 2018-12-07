@@ -37,6 +37,7 @@
         "no-trailing-spaces":"error",
         "prefer-template":"error",
         "space-in-parens": ["error", "never"],
-        "template-curly-spacing": "error"
+        "template-curly-spacing": "error",
+        "react/prop-types":"off"
     }
 }
