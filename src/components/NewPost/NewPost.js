@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import './NewPost.css';
 
 class NewPost extends Component {
     state = {
-        title: '',
-        content: '',
+        title: 'foo',
+        content: 'bar',
         author: 'Max'
+    }
+
+    postDataHandler = async () => {
+        const postData = {
+            title: this.state.title,
+            body: this.state.content,
+            author: this.state.author
+        };
+
+        const response = await axios.post('https://jsonplaceholder.typicode.com/posts/', postData);
+        console.log('Posted data:', response);
+        if(response.status === 201) {
+            this.setState({title:'',content:''});
+        }
     }
 
     render () {
@@ -22,7 +37,7 @@ class NewPost extends Component {
                     <option value="Max">Max</option>
                     <option value="Manu">Manu</option>
                 </select>
-                <button>Add Post</button>
+                <button onClick={this.postDataHandler}>Add Post</button>
             </div>
         );
     }
