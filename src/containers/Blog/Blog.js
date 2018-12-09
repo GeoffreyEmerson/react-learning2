@@ -39,7 +39,7 @@ class Blog extends Component {
     }
 
     loadUser = async (userId) => {
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+        const response = await axios.get(`/users/${userId}`);
         const authors = this.state.authors;
         authors[userId] = response.data;
         console.log(`loaded data for user:${userId}`, authors[userId]);
@@ -51,7 +51,7 @@ class Blog extends Component {
     }
 
     deletePostHandler = async (postId) => {
-        const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${postId}`);
+        const response = await axios.delete(`/posts/${postId}`);
         console.log('Deleted: ', response);
     }
 

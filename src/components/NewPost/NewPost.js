@@ -17,7 +17,7 @@ class NewPost extends Component {
             author: this.state.author
         };
 
-        const response = await axios.post('https://jsonplaceholder.typicode.com/posts/', postData);
+        const response = await axios.post('/posts', postData);
         console.log('Posted data:', response);
         if(response.status === 201) {
             this.setState({title:'',content:''});
