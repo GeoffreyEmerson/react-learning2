@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../axios';
 
 import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
@@ -17,7 +18,7 @@ class Blog extends Component {
 
     async componentDidMount() {
         try {
-            const response = await axios.get('http://jsonplaceholder.typicode.com/posts');
+            const response = await axios.get('/posts');
             const postData = {};
             response.data.forEach(post => {
                 postData[post.id] = post;
