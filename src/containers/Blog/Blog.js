@@ -1,100 +1,40 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
-import axios from '../../axios';
+import { Route, Link } from 'react-router-dom';
 
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
+import Posts from './Posts/Posts';
+import NewPost from './NewPost/NewPost';
+import FullPost from './FullPost/FullPost';
+
 import './Blog.css';
 
 class Blog extends Component {
-    state = {
-        postArray: [],
-        postData: {},
-        authors: {},
-        selectedPostId: null,
-        error: false
-    }
-
-    async componentDidMount() {
-        try {
-            const response = await axios.get('/posts');
-            const postData = {};
-            response.data.forEach(post => {
-                postData[post.id] = post;
-            });
-            const postArray = response.data; //.slice(0, 4);
-            console.log('Getting postArray: ', postArray);
-            const authors = {};
-            postArray.forEach(post => {
-                if(!authors[post.userId]) {
-                    authors[post.userId] = {name:'Loading author info...'};
-                    this.loadUser(post.userId);
-                }
-            });
-            this.setState({postArray, postData, authors});
-        } catch(e) {
-            console.log(`Axios error: ${e}`);
-            this.setState({ error: true });
-        }
-    }
-
-    loadUser = async (userId) => {
-        const response = await axios.get(`/users/${userId}`);
-        const authors = this.state.authors;
-        authors[userId] = response.data;
-        console.log(`loaded data for user:${userId}`, authors[userId]);
-        this.setState({authors});
-    }
-
-    postSelectedHandler = (id) => {
-        this.setState({selectedPostId:id});
-    }
-
-    deletePostHandler = async (postId) => {
-        const response = await axios.delete(`/posts/${postId}`);
-        console.log('Deleted: ', response);
-    }
-
     render () {
-        let posts = <p style={{textAlign:'center'}}>Loading...</p>;
-        let selectedPostId, selectedPost, author, title, body;
-
-        if (!this.state.error) {
-            posts = this.state.postArray.slice(0,4).map(post => {
-                return (
-                    <Post
-                        title={post.title}
-                        author={this.state.authors[post.userId].name}
-                        key={post.id}
-                        clicked={() => this.postSelectedHandler(post.id)}
-                    />
-                );
-            });
-            if (this.state.selectedPostId) {
-                selectedPostId = this.state.selectedPostId;
-                selectedPost = this.state.postData[selectedPostId];
-                title = selectedPost.title;
-                body = selectedPost.body;
-                author = this.state.authors[selectedPost.userId].name;
-            }
-        } else {
-            posts = <p>Something went wrong!</p>;
-        }
-
         return (
             <div className="Blog">
                 <header>
                     <nav>
                         <ul>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/new-post">New Post</a></li>
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to={{
+                                pathname: '/new-post',
+                                hash: '#submit',
+                                search: '?quick-submit=true'
+                            }}>New Post</Link></li>
                         </ul>
                     </nav>
                 </header>
-                <section className="Posts">
-                    {posts}
-                </section>
+                <Route path="/" exact component={Posts} />
+                <Route path="/new-post" component={NewPost} />
+                <Route path="/post" render={() => <FullPost /> } />
+
+            </div>
+        );
+    }
+}
+
+export default Blog;
+
+/*
                 <section>
                     <FullPost
                         id={selectedPostId}
@@ -107,9 +47,4 @@ class Blog extends Component {
                 <section>
                     <NewPost />
                 </section>
-            </div>
-        );
-    }
-}
-
-export default Blog;
+*/
