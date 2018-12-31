@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import Post from '../../../components/Post/Post';
 import axios from '../../../axios';
-
 import './Posts.css';
 
 class Posts extends Component {
@@ -14,7 +15,7 @@ class Posts extends Component {
         console.log('--> this.props:', this.props);
 
         if (this.state.posts.length < 1) {
-            console.log(`this.state.posts.length: ${this.state.posts.length}`);
+            console.log('No Posts. Loading...');
 
             try {
                 this.setState({loading: true});
@@ -33,21 +34,23 @@ class Posts extends Component {
     }
 
     render () {
-        let posts = <p style={{textAlign:'center'}}>Loading...</p>;
+        let posts = <p style={{textAlign:'center'}} key='0' >Loading!</p>;
         if (!this.state.loading) {
-            console.log(`this.state.posts.length: ${this.state.posts.length}`);
+            console.log(`Not loading. Numer of Posts: ${this.state.posts.length}`);
 
             posts = this.state.posts.map(post => {
                 return (
-                    <Post
-                        key={post.id}
-                        title={post.title}
-                        author={post.author}
-                        clicked={() => this.postSelectedHandler(post.id)}
-                    />
+                    <Link to={`/post/${post.id}`} key={post.id}>
+                        <Post
+                            title={post.title}
+                            author={post.author}
+                            clicked={() => this.postSelectedHandler(post.id)}
+                        />
+                    </Link>
                 );
             });
         }
+        console.log('Posts:', posts);
 
         return (
             <section className="Posts">
